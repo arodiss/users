@@ -1,0 +1,98 @@
+{% extends "layout.html" %}
+
+{% block content %}
+  <div class="pull-right">
+      <a class="btn btn-primary" href="/logout">Log out</a>
+  </div>
+
+  <ul class="nav nav-tabs" role="tablist">
+      <li role="presentation" class="active">
+          <a href="#add" aria-controls="add" role="tab" data-toggle="tab" class="tab-toggle">
+              Add
+          </a>
+      </li>
+      <li role="presentation">
+          <a href="#list" aria-controls="list" role="tab" data-toggle="tab" class="tab-toggle">
+              List
+          </a>
+      </li>
+  </ul>
+
+  <div class="tab-content">
+    <div id="add" role="tabpanel" class="row tab-pane active">
+        <div class="col-lg-12">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    Add one more user
+                </div>
+                <div class="panel-body">
+                    <form method="post" class="form-horizontal" action="/new">
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label required" for="name">Name</label>
+                            <div class="col-sm-10">
+                                <input type="text" id="name" name="name" required="required" class="form-control">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label required" for="password">Password</label>
+                            <div class="col-sm-10">
+                                <input type="text" id="password" name="password" required="required" class="form-control">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-2"></div>
+                            <div class="col-sm-10">
+                                <button type="submit" class="btn-default btn">
+                                    Save
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="list" class="row tab-pane{% if is_list_view %} active{% endif %}">
+        <div class="col-lg-12">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    List users
+                </div>
+                <div class="panel-body">
+                    {% if items | length %}
+                        <table class="table table-striped table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for item in items %}
+                                    <tr>
+                                        <td>{{ item.name }}</td>
+                                        <td>
+                                            {% if item.id != current_user.id %}
+                                                <a href="{{ url_for('delete', id = item.id) }}">
+                                                    <span class="glyphicon glyphicon-trash"></span>
+                                                </a>
+                                            {% else %}
+                                                <small class="text-muted">
+                                                    You cannot delete yourself
+                                                </small>
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    {% else %}
+                        <div class="text-muted">Nothing to show</div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+      </div>
+    </div>
+{% endblock %}
